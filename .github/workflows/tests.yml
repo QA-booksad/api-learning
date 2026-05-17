@@ -18,21 +18,24 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install dependencies
+      - name: Install Python dependencies
         run: |
           pip install -r requirements.txt
 
-      - name: Install Java
-        run: |
-          sudo apt update
-          sudo apt install default-jre -y
+      - name: Setup Java for Allure
+        uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: "17"
 
-      - name: Install Allure
+      - name: Setup NodeJS
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Allure CLI
         run: |
-          wget https://github.com/allure-framework/allure2/releases/latest/download/allure-2.34.1.tgz
-          tar -zxvf allure-2.34.1.tgz
-          sudo mv allure-2.34.1 /opt/allure
-          sudo ln -s /opt/allure/bin/allure /usr/bin/allure
+          npm install -g allure-commandline
 
       - name: Start API
         run: |
@@ -43,14 +46,14 @@ jobs:
         run: |
           pytest -v --alluredir=allure-results
 
-      - name: Generate Allure Report
+      - name: Generate Allure HTML report
         if: always()
         run: |
           allure generate allure-results --clean -o allure-report
 
-      - name: Upload Allure Report
-        uses: actions/upload-artifact@v4
+      - name: Upload Allure HTML report
         if: always()
+        uses: actions/upload-artifact@v4
         with:
           name: allure-report
           path: allure-report
