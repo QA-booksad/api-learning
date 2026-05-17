@@ -7,7 +7,7 @@ def test_root():
     response = requests.get(BASE_URL)
 
     assert response.status_code == 200
-    assert response.json()["message"] == "Hello QA"
+    assert response.json()["message"] == "Hello QAaa"
 
 
 def test_get_user():

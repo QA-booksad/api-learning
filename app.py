@@ -14,3 +14,10 @@ def get_user(user_id: int):
         "id": user_id,
         "name": "Maria"
     }
+
+
+@app.get("/status")
+def status():
+    return {
+        "status": "ok"
+    }
